@@ -1,0 +1,25 @@
+﻿{% extends "dist/object_withAceNav_withAceSideBar_withBreadCrumbs.html" %}
+{% block page_content %}
+<script src="{{url_for('static',filename='js/kline.js')}}"  ></script>
+<script src="{{url_for('static',filename='js/highcharts.js')}}"  ></script>
+<div class="row">
+	<div class="widget-box">
+	<div class="widget-header header-color-blue2">
+		<h4 class="lighter smaller">Choose Categories</h4>
+	</div>
+
+	<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div id="klineHighcharts">
+
+			</div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+
+
+
+{% endblock %}
