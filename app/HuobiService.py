@@ -416,6 +416,7 @@ if __name__ == '__main__':
     #get_kline()
     #print get_accounts()
 
-    #print get_balance()
+    print get_balance()
 
-    print get_kline(symbol="btcusdt",period="60min",size=150)
+    #print get_kline(symbol="btcusdt",period="60min",size=150)
+    #print orders_matchresults(symbol="btcusdt")

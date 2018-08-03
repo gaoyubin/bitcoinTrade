@@ -1,6 +1,5 @@
 ﻿{% extends "dist/object_withAceNav_withAceSideBar_withBreadCrumbs.html" %}
 {% block page_content %}
-
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
@@ -16,35 +15,6 @@
 
 <div class="container">
 	<div class="row">
-			<div class="widget-box" style="height: 300px;">
-					<div class="widget-header header-color-blue2">
-						<h4 class="lighter smaller">交易控制</h4>
-					</div>
-					<div class="widget-body">
-						<div class="widget-main padding-8">
-								<form class="form-inline">
-										<label class="sr-only" for="inlineFormInput">Arg1</label>
-										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg1">
-									  
-										<label class="sr-only" for="inlineFormInput">Arg2</label>
-										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg2">
-									  
-										<label class="sr-only" for="inlineFormInput">Arg3</label>
-										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg3">
-										
-									  
-										<button class="btn btn-success" onclick="start_trade()">开始交易</button>
-										<button class="btn btn-danger" onclick="stop_trade()">停止交易</button>
-								</form>
-						
-						</div>
-					</div>	
-
-			</div>
-		</div>
-
-
-	<div class="row">
 		<div class="widget-box" style="height: 500px;">
 				<div class="widget-header header-color-blue2">
 					<h4 class="lighter smaller">K线图</h4>
@@ -53,7 +23,7 @@
 					<div class="widget-main padding-8">
 						<div id="kline" style="height: 100%"></div>
 					</div>
-				</div>	
+				</div>
 		</div>
 	</div>
 	<div class="row" style="height: 50px;"></div>
@@ -66,7 +36,7 @@
 						<div class="widget-main padding-8">
 							<div id="balance" style="height: 100%;width: 100%;"></div>
 						</div>
-					</div>	
+					</div>
 			</div>
 	</div>
 	<div class="row" style="height: 50px;"></div>
@@ -77,20 +47,11 @@
 					</div>
 					<div class="widget-body">
 						<div class="widget-main padding-8">
-								<table class="table" id="history">
-										<thead>
-										  <tr>
-											<th scope="col">时间</th>
-											<th scope="col">成交方向</th>
-											<th scope="col">成交价</th>
-											<th scope="col">成交量</th>
-										  </tr>
-										</thead>
-										<tbody id='history-table'>																																																												
-										</tbody>
-									  </table>
+								<div  id="history">
+
+								</div>
 						</div>
-					</div>	
+					</div>
 			</div>
 	</div>
 </div>
@@ -111,7 +72,7 @@
 		var downBorderColor = '#008F28';
 
 
-		
+
 		var datas;
 		var data0;
 		var option4kline;
@@ -131,7 +92,7 @@
 			});
 		}
 
-		
+
 
 		function splitData(rawData) {
 			var categoryData = [];
@@ -342,7 +303,7 @@
 								normal: {opacity: 0.5}
 							}
 						},
-					] 
+					]
 				};
 				return option;
 		}
@@ -368,7 +329,7 @@
 				axisY:{
 					prefix: "$",
 					includeZero: false
-				}, 
+				},
 				toolTip: {
 					shared: true
 				},
@@ -379,7 +340,7 @@
 					fontColor: "dimGrey",
 					itemclick : toggleDataSeries
 				},
-				data: [{ 
+				data: [{
 					type: "line",
 					xValueType: "dateTime",
 					yValueFormatString: "$####.00",
@@ -402,7 +363,7 @@
 
 			var updateInterval = 3000;
 			// initial value
-			var yValue1 = 0; 
+			var yValue1 = 0;
 			var yValue2 = 100;
 
 			var time = new Date();
@@ -436,60 +397,71 @@
 				// 	});
 				// chart.render();
 			}
-			
-			// generates first set of dataPoints 
-			updateChart(0);	
+
+			// generates first set of dataPoints
+			updateChart(0);
 			setInterval(function(){updateChart()}, updateInterval);
-			//loadtable();
+			loadtable();
 
 }
 ////////////////////////////////////////////
+function  createTable(id,data,title){
 
+    id.children("table").remove()
+
+
+    console.log(data)
+
+    var table = $('<table  border="1"  class="table table-responsive table-condensed table-bordered table-hover  " role="grid" style="margin:0px ;font-size:18px; border: 1px solid #2A91D8;" >');
+
+    table.appendTo(id);
+
+
+    var caption=$("<caption style='text-align: center;font-size: 24px;font-weight: bold;color:black;padding-bottom: 10px' >"+title+"</caption>")
+    caption.appendTo(table)
+
+    tableHead=new Array("时间","成交方向","成交价","成交量")
+    var tr = $("<thead></thead>");
+    tr.appendTo(table);
+    for(var i=0;i<tableHead.length;i++)
+    {
+        var td = $("<th  style='text-align: center;background-color: rgba(117, 192, 255, 0.52)' >"+tableHead[i]+"</th>");
+        td.appendTo(tr);
+    }
+
+
+   for(var i=0;i<data.length;i++){
+    	var tr=$("<tr></tr>");
+    	 tr.appendTo(table);
+    	 for(var j=0;j<data[i].length;j++){
+    	 	 var td = $("<td  style='text-align: center;'>" + data[i][j] + "</td>");
+    	 	 td.appendTo(tr);
+		 }
+   }
+
+    id.append("</table>");
+
+}
 function loadtable(){
-	datas = [];
-		var history_table = document.getElementById('history-table');
+	 $.ajax(
+        {
+            type: 'GET',
+            url: '/api/history',
+            dataType: 'json',//希望服务器返回json格式的数据
+            success: function (data) {
+                console.log(data)
 
-		fetch('/api/history').then(
-			(response)=>{
-				return response.json(); 
-			}
-		).then(
-			(data)=>{
-				for(var i = 0;i < data.length;i++){
-					e = data[i];
-					var temp = [];
-					temp.push(e.time);
-					temp.push(e.direction);
-					temp.push(e.price);
-					temp.push(e.amount);
-					datas.push(temp);
-				}
-			}
-		);
 
-		while(true){
-			if (datas.length != 0)
-				break;
-		}
-		for (var i = 0;i < datas.length;i++){
-			// var temp = datas[i];
+				createTable($('#history'),data)
+            },
 
-			history_table.children[i].innerHTML=
-							'<td>' + 1 + '</td>' +
-							'<td>' + 2 + '</td>' +
-							'<td>' + 3 + '</td>' +
-							'<td>' + 4 + '</td>';
-		}
+            async: false,
+        }
+    );
 }
 
 
-function start_trade(){
-	fetch('/api/start');
-}
 
-function stop_trade(){
-	fetch('/api/stop');
-}	
 
 </script>
 
