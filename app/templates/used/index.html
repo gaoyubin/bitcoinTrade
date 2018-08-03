@@ -15,6 +15,34 @@
 
 <div class="container">
 	<div class="row">
+			<div class="widget-box" style="height: 300px;">
+					<div class="widget-header header-color-blue2">
+						<h4 class="lighter smaller">交易控制</h4>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main padding-8">
+								<form class="form-inline">
+										<label class="sr-only" for="inlineFormInput">Arg1</label>
+										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg1">
+									  
+										<label class="sr-only" for="inlineFormInput">Arg2</label>
+										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg2">
+									  
+										<label class="sr-only" for="inlineFormInput">Arg3</label>
+										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg3">
+										
+									  
+										<button class="btn btn-success" onclick="start_trade()">开始交易</button>
+										<button class="btn btn-danger" onclick="stop_trade()">停止交易</button>
+								</form>
+						
+						</div>
+					</div>	
+			</div>
+		</div>
+
+
+	<div class="row">
 		<div class="widget-box" style="height: 500px;">
 				<div class="widget-header header-color-blue2">
 					<h4 class="lighter smaller">K线图</h4>
@@ -56,37 +84,7 @@
 											<th scope="col">成交量</th>
 										  </tr>
 										</thead>
-										<tbody id='history-table'>
-											<tr>
-
-											</tr>
-											<tr>
-												
-											</tr>
-											<tr>
-												
-											</tr>
-											<tr>
-												
-											</tr>
-											<tr>
-												
-											</tr>
-											<tr>
-												
-											</tr>
-											<tr>
-												
-											</tr>
-											<tr>
-												
-											</tr>
-											<tr>
-												
-											</tr>	
-											<tr>
-												
-											</tr>																																																												
+										<tbody id='history-table'>																																																												
 										</tbody>
 									  </table>
 						</div>
@@ -483,7 +481,13 @@ function loadtable(){
 }
 
 
-		
+function start_trade(){
+	fetch('/api/start');
+}
+
+function stop_trade(){
+	fetch('/api/stop');
+}	
 
 </script>
 

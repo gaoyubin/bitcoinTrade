@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+from subprocess import Popen
 app=Flask(__name__)
 app.config.from_object(Config)
 '''
@@ -16,6 +17,9 @@ loginmanager.init_app(app)
 
 
 '''
+
+# trade process
+trade_proc = 1440
 
 
 from app import views

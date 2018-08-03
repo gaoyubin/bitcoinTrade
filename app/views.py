@@ -3,6 +3,8 @@ from app import app
 from flask import render_template,jsonify,request
 import HuobiService
 from helpler import ts_to_time
+from subprocess import Popen
+from app import trade_proc
 
 menus=[
     {"target":"index","name":u"自动炒币","state":"","icon":"icon-edit"},
@@ -125,6 +127,44 @@ def get_history(symbol='btcusdt', size=10):
         temp['time'] = "2019.10.1"
         data.append(temp)
     return jsonify(data)
+
+
+@app.route('/api/start')
+def start_trade():
+    '''
+    开始交易
+    :return:
+    '''
+    global trade_proc
+    args = ['python', 'worker.py']
+    if trade_proc == 1440:
+        trade_proc = Popen(args)
+    elif not trade_proc.poll(): # 交易进程还没结束
+        return jsonify({'msg': "It's been running!"})
+    else:
+        trade_proc = Popen(args)
+
+    return jsonify({'msg': 'start success!'})
+
+
+@app.route('/api/stop')
+def stop_trade():
+    '''
+    停止交易
+    :return:
+    '''
+    global trade_proc
+    if trade_proc and trade_proc != 1440:
+        trade_proc.terminate()
+
+    return jsonify({'msg': 'Stop success!'})
+
+@app.route('/api/runstate')
+def get_trade_state():
+    if trade_proc == 1440 or trade_proc.poll():
+        return jsonify({"status": "stop"})
+    else:
+        return jsonify({"status": "running"})
 
 
 @app.route('/checkCapital', methods=['GET', 'POST'])
