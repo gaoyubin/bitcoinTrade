@@ -159,11 +159,12 @@ def get_history(symbol='btcusdt', size=10):
     data = []
     import random
     for i in range(size):
-        temp = dict();
-        temp['amount'] = random.random()
-        temp['price'] = random.randrange(500, 600)
-        temp['direction'] = "buy"
-        temp['time'] = "2019.10.1"
+        temp = [];
+        # amount price direction time
+        temp.append(random.random())
+        temp.append(random.randrange(500, 600))
+        temp.append("buy")
+        temp.append("2019.10.1")
         data.append(temp)
     return jsonify(data)
 

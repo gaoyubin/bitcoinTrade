@@ -202,7 +202,7 @@ $(function () {
 		 $.ajax(
         {
             type: 'GET',
-            url: '/api/kline',
+            url: '/api/check/getkline',
             dataType: 'json',//希望服务器返回json格式的数据
             data: data,
             success: function (data) {
@@ -219,7 +219,7 @@ $(function () {
 	$('#checkBtn').click()
 	$.ajax({
 		 type: 'GET',
-            url: '/api/getBalance',
+            url: '/api/check/getBalance',
             dataType: 'json',//希望服务器返回json格式的数据
 
             success: function (data) {
