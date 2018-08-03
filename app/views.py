@@ -49,6 +49,83 @@ def getKline():
     ret['data'] = kline
     return jsonify(ret)
 
+@app.route("/api/balance")
+def getBalance():
+    '''
+        /* GET /v1/account/accounts/'account-id'/balance */
+        {
+          "status": "ok",
+          "data": {
+            "id": 100009,
+            "type": "spot",
+            "state": "working",
+            "list": [
+              {
+                "currency": "usdt",
+                "type": "trade",
+                "balance": "500009195917.4362872650"
+              },
+              {
+                "currency": "usdt",
+                "type": "frozen",
+                "balance": "328048.1199920000"
+              },
+             {
+                "currency": "etc",
+                "type": "trade",
+                "balance": "499999894616.1302471000"
+              },
+              {
+                "currency": "etc",
+                "type": "frozen",
+                "balance": "9786.6783000000"
+              }
+             {
+                "currency": "eth",
+                "type": "trade",
+                "balance": "499999894616.1302471000"
+              },
+              {
+                "currency": "eth",
+                "type": "frozen",
+                "balance": "9786.6783000000"
+              }
+            ],
+            "user-id": 1000
+          }
+        }
+    '''
+
+    # 现在暂时用假数据代替
+    import random
+
+    ret = dict()
+    ret['status'] = 'OK'
+    ret['list'] = []
+    ret['list'].append({
+                "currency": "usdt",
+                "type": "trade",
+                "balance": "{}".format(random.randrange(90, 110))})
+
+    return jsonify(ret)
+
+@app.route('/api/history')
+def get_history(symbol='btcusdt', size=10):
+    '''
+    获取交易记录
+    :return:
+    '''
+    data = []
+    import random
+    for i in range(size):
+        temp = dict();
+        temp['amount'] = random.random()
+        temp['price'] = random.randrange(500, 600)
+        temp['direction'] = "buy"
+        temp['time'] = "2019.10.1"
+        data.append(temp)
+    return jsonify(data)
+
 
 @app.route('/checkCapital', methods=['GET', 'POST'])
 def checkCapital():
