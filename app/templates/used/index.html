@@ -1,25 +1,497 @@
 ﻿{% extends "dist/object_withAceNav_withAceSideBar_withBreadCrumbs.html" %}
 {% block page_content %}
-<script src="{{url_for('static',filename='js/kline.js')}}"  ></script>
 
- <script src="{{url_for('static',filename='js/echarts.min.js')}}"></script>
-<script src="{{url_for('static',filename='js/highcharts.js')}}"  ></script>
-<div class="row">
-	<div class="widget-box">
-	<div class="widget-header header-color-blue2">
-		<h4 class="lighter smaller">Choose Categories</h4>
-	</div>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
-	<div class="widget-body">
-		<div class="widget-main padding-8">
-			<div id="klineHighcharts">
-             <div id="main" style="width: 600px;height:400px;"></div>
+
+
+<div class="container">
+	<div class="row">
+			<div class="widget-box" style="height: 300px;">
+					<div class="widget-header header-color-blue2">
+						<h4 class="lighter smaller">交易控制</h4>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main padding-8">
+								<form class="form-inline">
+										<label class="sr-only" for="inlineFormInput">Arg1</label>
+										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg1">
+									  
+										<label class="sr-only" for="inlineFormInput">Arg2</label>
+										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg2">
+									  
+										<label class="sr-only" for="inlineFormInput">Arg3</label>
+										<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Arg3">
+										
+									  
+										<button class="btn btn-success" onclick="start_trade()">开始交易</button>
+										<button class="btn btn-danger" onclick="stop_trade()">停止交易</button>
+								</form>
+						
+						</div>
+					</div>	
+
 			</div>
 		</div>
+
+
+	<div class="row">
+		<div class="widget-box" style="height: 500px;">
+				<div class="widget-header header-color-blue2">
+					<h4 class="lighter smaller">K线图</h4>
+				</div>
+				<div class="widget-body">
+					<div class="widget-main padding-8">
+						<div id="kline" style="height: 100%"></div>
+					</div>
+				</div>	
+		</div>
+	</div>
+	<div class="row" style="height: 50px;"></div>
+	<div class="row">
+			<div class="widget-box" style="height: 500px;">
+					<div class="widget-header header-color-blue2">
+						<h4 class="lighter smaller">账户余额</h4>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main padding-8">
+							<div id="balance" style="height: 100%;width: 100%;"></div>
+						</div>
+					</div>	
+			</div>
+	</div>
+	<div class="row" style="height: 50px;"></div>
+	<div class="row">
+			<div class="widget-box" style="height: 500px;">
+					<div class="widget-header header-color-blue2">
+						<h4 class="lighter smaller">交易记录</h4>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main padding-8">
+								<table class="table" id="history">
+										<thead>
+										  <tr>
+											<th scope="col">时间</th>
+											<th scope="col">成交方向</th>
+											<th scope="col">成交价</th>
+											<th scope="col">成交量</th>
+										  </tr>
+										</thead>
+										<tbody id='history-table'>																																																												
+										</tbody>
+									  </table>
+						</div>
+					</div>	
+			</div>
 	</div>
 </div>
 
-</div>
+
+
+
+
+
+<script type="text/javascript">
+		var dom = document.getElementById("kline");
+		var myChart = echarts.init(dom);
+		var app = {};
+		option = null;
+		var upColor = '#ec0000';
+		var upBorderColor = '#8A0000';
+		var downColor = '#00da3c';
+		var downBorderColor = '#008F28';
+
+
+		
+		var datas;
+		var data0;
+		var option4kline;
+
+		function setkline(){
+			fetch('/api/kline')
+				.then(function(response) {
+					return response.json();
+			}).then((j)=>{
+					datas = j['data'];
+					//console.log(datas);
+					data0 = splitData(datas);
+					option4kline = setoption(data0);
+					if (option4kline && typeof option4kline === "object") {
+						myChart.setOption(option4kline, true);
+					}
+			});
+		}
+
+		
+
+		function splitData(rawData) {
+			var categoryData = [];
+			var values = []
+			for (var i = rawData.length-1;i >= 0;i--) {
+				categoryData.push(rawData[i].splice(0, 1)[0]);
+				values.push(rawData[i]);
+			}
+			return {
+				categoryData: categoryData,
+				values: values
+			};
+		}
+
+		function calculateMA(dayCount) {
+			var result = [];
+			for (var i = 0, len = data0.values.length; i < len; i++) {
+				if (i < dayCount) {
+					result.push('-');
+					continue;
+				}
+				var sum = 0;
+				for (var j = 0; j < dayCount; j++) {
+					sum += data0.values[i - j][1];
+				}
+				result.push(sum / dayCount);
+			}
+			return result;
+		}
+
+
+
+		function setoption(data0){
+					option = {
+					title: {
+						text: 'BTC-USDT',
+						left: 0
+					},
+					tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+							type: 'cross'
+						}
+					},
+					legend: {
+						data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
+					},
+					grid: {
+						left: '10%',
+						right: '10%',
+						bottom: '15%'
+					},
+					xAxis: {
+						type: 'category',
+						data: data0.categoryData,
+						scale: true,
+						boundaryGap : false,
+						axisLine: {onZero: false},
+						splitLine: {show: false},
+						splitNumber: 20,
+						min: 'dataMin',
+						max: 'dataMax'
+					},
+					yAxis: {
+						scale: true,
+						splitArea: {
+							show: true
+						}
+					},
+					dataZoom: [
+						{
+							type: 'inside',
+							start: 80,
+							end: 100
+						},
+						{
+							show: true,
+							type: 'slider',
+							y: '90%',
+							start: 80,
+							end: 100
+						}
+					],
+					series: [
+						{
+							name: '日K',
+							type: 'candlestick',
+							data: data0.values,
+							itemStyle: {
+								normal: {
+									color: upColor,
+									color0: downColor,
+									borderColor: upBorderColor,
+									borderColor0: downBorderColor
+								}
+							},
+							markPoint: {
+								label: {
+									normal: {
+										formatter: function (param) {
+											return param != null ? Math.round(param.value) : '';
+										}
+									}
+								},
+								data: [
+									{
+										name: 'XX标点',
+										coord: ['2013/5/31', 2300],
+										value: 2300,
+										itemStyle: {
+											normal: {color: 'rgb(41,60,85)'}
+										}
+									},
+									{
+										name: 'highest value',
+										type: 'max',
+										valueDim: 'highest'
+									},
+									{
+										name: 'lowest value',
+										type: 'min',
+										valueDim: 'lowest'
+									},
+									{
+										name: 'average value on close',
+										type: 'average',
+										valueDim: 'close'
+									}
+								],
+								tooltip: {
+									formatter: function (param) {
+										return param.name + '<br>' + (param.data.coord || '');
+									}
+								}
+							},
+							markLine: {
+								symbol: ['none', 'none'],
+								data: [
+									[
+										{
+											name: 'from lowest to highest',
+											type: 'min',
+											valueDim: 'lowest',
+											symbol: 'circle',
+											symbolSize: 10,
+											label: {
+												normal: {show: false},
+												emphasis: {show: false}
+											}
+										},
+										{
+											type: 'max',
+											valueDim: 'highest',
+											symbol: 'circle',
+											symbolSize: 10,
+											label: {
+												normal: {show: false},
+												emphasis: {show: false}
+											}
+										}
+									],
+									{
+										name: 'min line on close',
+										type: 'min',
+										valueDim: 'close'
+									},
+									{
+										name: 'max line on close',
+										type: 'max',
+										valueDim: 'close'
+									}
+								]
+							}
+						},
+						{
+							name: 'MA5',
+							type: 'line',
+							data: calculateMA(5),
+							smooth: true,
+							lineStyle: {
+								normal: {opacity: 0.5}
+							}
+						},
+						{
+							name: 'MA10',
+							type: 'line',
+							data: calculateMA(10),
+							smooth: true,
+							lineStyle: {
+								normal: {opacity: 0.5}
+							}
+						},
+						{
+							name: 'MA20',
+							type: 'line',
+							data: calculateMA(20),
+							smooth: true,
+							lineStyle: {
+								normal: {opacity: 0.5}
+							}
+						},
+						{
+							name: 'MA30',
+							type: 'line',
+							data: calculateMA(30),
+							smooth: true,
+							lineStyle: {
+								normal: {opacity: 0.5}
+							}
+						},
+					] 
+				};
+				return option;
+		}
+		setkline();
+		setInterval(setkline, 60000);
+
+
+		//////////////////////////////////////////////////////////
+
+
+		window.onload = function () {
+			var dataPoints1 = [];
+			var dataPoints2 = [];
+
+			var chart = new CanvasJS.Chart("balance", {
+				zoomEnabled: true,
+				title: {
+					text: "账户余额"
+				},
+				axisX: {
+					title: ""
+				},
+				axisY:{
+					prefix: "$",
+					includeZero: false
+				}, 
+				toolTip: {
+					shared: true
+				},
+				legend: {
+					cursor:"pointer",
+					verticalAlign: "top",
+					fontSize: 22,
+					fontColor: "dimGrey",
+					itemclick : toggleDataSeries
+				},
+				data: [{ 
+					type: "line",
+					xValueType: "dateTime",
+					yValueFormatString: "$####.00",
+					xValueFormatString: "hh:mm:ss TT",
+					showInLegend: true,
+					name: "交易余额",
+					dataPoints: dataPoints1
+					}]
+			});
+
+			function toggleDataSeries(e) {
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				}
+				else {
+					e.dataSeries.visible = true;
+				}
+				chart.render();
+			}
+
+			var updateInterval = 3000;
+			// initial value
+			var yValue1 = 0; 
+			var yValue2 = 100;
+
+			var time = new Date();
+			// starting at 9.30 am
+			// time.setHours(9);
+			// time.setMinutes(30);
+			// time.setSeconds(00);
+			// time.setMilliseconds(00);
+
+			function updateChart(count) {
+				count = count || 1;
+				time = new Date();
+				fetch("/api/balance").then(
+					(response)=>{
+						return response.json();
+					}
+				).then((data)=>{
+					//console.log(data['list'][0]['balance']);
+					yValue1 = parseFloat(data['list'][0]['balance']);
+					dataPoints1.push({
+						x: time.getTime(),
+						y: yValue1
+					});
+					chart.options.data[0].legendText = "交易余额 $" + yValue1;
+					chart.render();
+				});
+				// yValue1++;
+				// dataPoints1.push({
+				// 		x: time.getTime(),
+				// 		y: yValue1
+				// 	});
+				// chart.render();
+			}
+			
+			// generates first set of dataPoints 
+			updateChart(0);	
+			setInterval(function(){updateChart()}, updateInterval);
+			//loadtable();
+
+}
+////////////////////////////////////////////
+
+function loadtable(){
+	datas = [];
+		var history_table = document.getElementById('history-table');
+
+		fetch('/api/history').then(
+			(response)=>{
+				return response.json(); 
+			}
+		).then(
+			(data)=>{
+				for(var i = 0;i < data.length;i++){
+					e = data[i];
+					var temp = [];
+					temp.push(e.time);
+					temp.push(e.direction);
+					temp.push(e.price);
+					temp.push(e.amount);
+					datas.push(temp);
+				}
+			}
+		);
+
+		while(true){
+			if (datas.length != 0)
+				break;
+		}
+		for (var i = 0;i < datas.length;i++){
+			// var temp = datas[i];
+
+			history_table.children[i].innerHTML=
+							'<td>' + 1 + '</td>' +
+							'<td>' + 2 + '</td>' +
+							'<td>' + 3 + '</td>' +
+							'<td>' + 4 + '</td>';
+		}
+}
+
+
+function start_trade(){
+	fetch('/api/start');
+}
+
+function stop_trade(){
+	fetch('/api/stop');
+}	
+
+</script>
 
 
 
