@@ -1,8 +1,8 @@
-﻿{% extends "dist/object_withAceNav_withAceSideBar_withBreadCrumbs.html" %}
+﻿{% extends "dist/layout.html" %}
 {% block page_content %}
 <script src="{{url_for('static',filename='js/check.js')}}"  ></script>
 <script src="{{url_for('static',filename='js/highcharts.js')}}"  ></script>
- <script src="{{url_for('static',filename='js/echarts.min.js')}}"></script>
+<script src="{{url_for('static',filename='js/echarts.min.js')}}"></script>
 <div class="row" style="margin: 20px">
 
     <div style="font-size: 20px;margin-bottom: 15px">交易余额:

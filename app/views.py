@@ -1,7 +1,7 @@
 #-*-coding:utf-8-*-
 from app import app
 from flask import render_template, jsonify, request
-import HuobiService
+from . import HuobiService
 
 from helpler import ts_to_time
 from subprocess import Popen
@@ -13,12 +13,12 @@ import time
 menus = [
     {
         "target": "index",
-        "name": u"自动炒币",
+        "name": "自动炒币",
         "state": "",
         "icon": "icon-edit"
     }, {
         "target": "checkCapital",
-        "name": u"炒币查询",
+        "name": "炒币查询",
         "state": "",
         "icon": "icon-picture"
     }

@@ -5,7 +5,7 @@
 # @QQ      : 375235513
 # @github  : https://github.com/KlausQIU
 
-from HuobiUtil import *
+from .HuobiUtil import *
 '''
 Market data API
 '''
@@ -105,7 +105,7 @@ def get_balance(acct_id=None):
             accounts = get_accounts()
             acct_id = ACCOUNT_ID = accounts['data'][0]['id']
         except BaseException as e:
-            print 'get acct_id error.%s' % e
+            print('get acct_id error.%s' % e)
             acct_id = ACCOUNT_ID
 
     url = "/v1/account/accounts/{0}/balance".format(acct_id)
@@ -129,7 +129,7 @@ def send_order(amount, source, symbol, _type, price=0):
         accounts = get_accounts()
         acct_id = accounts['data'][0]['id']
     except BaseException as e:
-        print 'get acct_id error.%s' % e
+        print('get acct_id error.%s' % e)
         acct_id = ACCOUNT_ID
 
     params = {
@@ -319,7 +319,7 @@ def send_margin_order(amount, source, symbol, _type, price=0):
         accounts = get_accounts()
         acct_id = accounts['data'][0]['id']
     except BaseException as e:
-        print 'get acct_id error.%s' % e
+        print('get acct_id error.%s' % e)
         acct_id = ACCOUNT_ID
 
     params = {
@@ -440,7 +440,7 @@ if __name__ == '__main__':
     #get_kline()
     #print get_accounts()
 
-    print get_balance()
+    print(get_balance())
 
     #print get_kline(symbol="btcusdt",period="60min",size=150)
     #print orders_matchresults(symbol="btcusdt")

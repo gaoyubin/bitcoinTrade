@@ -10,11 +10,11 @@ import hmac
 import hashlib
 import json
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 import requests
-import urllib2
-import urlparse
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 
 # timeout in 5 seconds:
 TIMEOUT = 5
@@ -72,7 +72,7 @@ def http_get_request(url, params, add_to_headers=None):
     }
     if add_to_headers:
         headers.update(add_to_headers)
-    postdata = urllib.urlencode(params)
+    postdata = urllib.parse.urlencode(params)
     try:
         response = requests.get(
             url, postdata, headers=headers, timeout=TIMEOUT)
@@ -81,7 +81,7 @@ def http_get_request(url, params, add_to_headers=None):
         else:
             return {"status": "fail"}
     except Exception as e:
-        print("httpGet failed, detail is:%s" % e)
+        print(("httpGet failed, detail is:%s" % e))
         return {"status": "fail", "msg": e}
 
 
@@ -107,15 +107,15 @@ def http_post_request(url, params, add_to_headers=None):
         else:
             return response.json()
     except Exception as e:
-        print("httpPost failed, detail is:%s" % e)
+        print(("httpPost failed, detail is:%s" % e))
         return {"status": "fail", "msg": e}
 
 
 def api_key_get(params, request_path):
     method = 'GET'
-    print datetime.datetime.utcnow()
+    print(datetime.datetime.utcnow())
     timestamp = datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
-    print timestamp
+    print(timestamp)
     params.update({
         'AccessKeyId': ACCESS_KEY,
         'SignatureMethod': 'HmacSHA256',
@@ -124,12 +124,12 @@ def api_key_get(params, request_path):
     })
 
     host_name = host_url = TRADE_URL
-    host_name = urlparse.urlparse(host_url).hostname
+    host_name = urllib.parse.urlparse(host_url).hostname
     host_name = host_name.lower()
 
     params['Signature'] = createSign(params, method, host_name, request_path,
                                      SECRET_KEY)
-    print params['Signature']
+    print(params['Signature'])
     url = host_url + request_path
     return http_get_request(url, params)
 
@@ -145,17 +145,17 @@ def api_key_post(params, request_path):
     }
 
     host_url = TRADE_URL
-    host_name = urlparse.urlparse(host_url).hostname
+    host_name = urllib.parse.urlparse(host_url).hostname
     host_name = host_name.lower()
     params_to_sign['Signature'] = createSign(params_to_sign, method, host_name,
                                              request_path, SECRET_KEY)
-    url = host_url + request_path + '?' + urllib.urlencode(params_to_sign)
+    url = host_url + request_path + '?' + urllib.parse.urlencode(params_to_sign)
     return http_post_request(url, params)
 
 
 def createSign(pParams, method, host_url, request_path, secret_key):
-    sorted_params = sorted(pParams.items(), key=lambda d: d[0], reverse=False)
-    encode_params = urllib.urlencode(sorted_params)
+    sorted_params = sorted(list(pParams.items()), key=lambda d: d[0], reverse=False)
+    encode_params = urllib.parse.urlencode(sorted_params)
     payload = [method, host_url, request_path, encode_params]
     payload = '\n'.join(payload)
     payload = payload.encode(encoding='UTF8')

@@ -24,7 +24,7 @@ trade_proc = 1440
 from app import views
 
 if not app.debug:
-    print "app.debug", app.debug
+    print("app.debug", app.debug)
     import logging
     from logging.handlers import SMTPHandler
     credentials = None
