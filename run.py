@@ -1,5 +1,4 @@
-#!flask/bin/python
-#encoding:utf-8
+#!/usr/bin/env python2
 from app import app
 import os
 #print app.config["basedir"]

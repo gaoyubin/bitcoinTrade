@@ -19,7 +19,7 @@ class Config(object):
     CSRF_ENABLED = True
     #WHOOSH_BASE = os.path.join(basedir, 'search.db')
     #WHOOSH_BASE = os.path.join(basedir, 'search.db')
-    DEBUG=True
+    DEBUG = True
 
     MAIL_SERVER = 'localhost'
     MAIL_PORT = 25
@@ -28,4 +28,3 @@ class Config(object):
 
     # administrator list
     ADMINS = ['2465272199@qq.com']
-

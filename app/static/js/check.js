@@ -1,62 +1,3 @@
-function createHighCharts(){
-    var chart = Highcharts.chart('klineHighcharts', {
-		title: {
-				text: '2010 ~ 2016 年太阳能行业就业人员发展情况'
-		},
-		subtitle: {
-				text: '数据来源：thesolarfoundation.com'
-		},
-		yAxis: {
-				title: {
-						text: '就业人数'
-				}
-		},
-		legend: {
-				layout: 'vertical',
-				align: 'right',
-				verticalAlign: 'middle'
-		},
-		plotOptions: {
-				series: {
-						label: {
-								connectorAllowed: false
-						},
-						pointStart: 2010
-				}
-		},
-		series: [{
-				name: '安装，实施人员',
-				data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-		}, {
-				name: '工人',
-				data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-		}, {
-				name: '销售',
-				data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-		}, {
-				name: '项目开发',
-				data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-		}, {
-				name: '其他',
-				data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-		}],
-		responsive: {
-				rules: [{
-						condition: {
-								maxWidth: 500
-						},
-						chartOptions: {
-								legend: {
-										layout: 'horizontal',
-										align: 'center',
-										verticalAlign: 'bottom'
-								}
-						}
-				}]
-		}
-});
-}
-
 function  createTable(id,data,title){
 
     id.children("table").remove()
@@ -83,12 +24,12 @@ function  createTable(id,data,title){
 
 
    for(var i=0;i<data.length;i++){
-    	var tr=$("<tr></tr>");
-    	 tr.appendTo(table);
-    	 for(var j=0;j<data[i].length;j++){
-    	 	 var td = $("<td  style='text-align: center;'>" + data[i][j] + "</td>");
-    	 	 td.appendTo(tr);
-		 }
+        var tr=$("<tr></tr>");
+         tr.appendTo(table);
+         for(var j=0;j<data[i].length;j++){
+              var td = $("<td  style='text-align: center;'>" + data[i][j] + "</td>");
+              td.appendTo(tr);
+         }
    }
 
     id.append("</table>");
@@ -96,7 +37,7 @@ function  createTable(id,data,title){
 }
 
 function createECharts(data){
-	var myChart = echarts.init(document.getElementById('main'));
+    var myChart = echarts.init(document.getElementById('main'));
     option = {
     title : {
         text: '比特币趋势以及购买情况'
@@ -145,7 +86,7 @@ function createECharts(data){
             scale:true,
             boundaryGap: [0.01, 0.01]
         },
-		 {
+         {
             type : 'value',
             name : '投资情况'
 
@@ -155,17 +96,17 @@ function createECharts(data){
         {
             name:'上证指数',
             type:'k',
-			// 开盘，收盘，最低，最高
+            // 开盘，收盘，最低，最高
             data:data["klines"]
         },
-    	{
-   			name:'买',
+        {
+               name:'买',
             type:'bar',
             yAxisIndex: 1,
             data:data["buy-limit"]
         },
-		{
-   			name:'卖',
+        {
+               name:'卖',
             type:'bar',
             yAxisIndex: 1,
             data:data["sell-limit"]
@@ -174,10 +115,10 @@ function createECharts(data){
 
 
     ],
-	color: ['rgb(239,219,200)','rgb(137,246,100)','rgb(155,314,203)','rgb(155,155,146)','rgb(111,222,100)']
+    color: ['rgb(239,219,200)','rgb(137,246,100)','rgb(155,314,203)','rgb(155,155,146)','rgb(111,222,100)']
 };
 
-	myChart.setOption(option);
+    myChart.setOption(option);
 
 }
 $(function () {
@@ -185,21 +126,21 @@ $(function () {
 
 
 
-	$('#checkBtn').click(function () {
-		console.log("btn")
+    $('#checkBtn').click(function () {
+        console.log("btn")
 
-		if($('#klineType').val()=="30min")
-			size=parseInt($('#dates').val())*24*2
-		else if($('#klineType').val()=="60min")
-			size=parseInt($('#dates').val())*24
-		else if($('#klineType').val()=="1day")
-			size=parseInt($('#dates').val())
+        if($('#klineType').val()=="30min")
+            size=parseInt($('#dates').val())*24*2
+        else if($('#klineType').val()=="60min")
+            size=parseInt($('#dates').val())*24
+        else if($('#klineType').val()=="1day")
+            size=parseInt($('#dates').val())
 
-			var data = {"symbol": $('#coinType').val(),
+            var data = {"symbol": $('#coinType').val(),
         "period": $('#klineType').val(),
         "size": size}
-    	console.log(data)
-		 $.ajax(
+        console.log(data)
+         $.ajax(
         {
             type: 'GET',
             url: '/api/check/getkline',
@@ -207,30 +148,28 @@ $(function () {
             data: data,
             success: function (data) {
                 console.log(data)
-                //createHighCharts()
                 createECharts(data)
-				createTable($('#matcheTable'),data["matchRecords"])
+                createTable($('#matcheTable'),data["matchRecords"])
             },
 
             async: false,
         }
     );
     })
-	$('#checkBtn').click()
-	$.ajax({
-		 type: 'GET',
+    $('#checkBtn').click()
+    $.ajax({
+         type: 'GET',
             url: '/api/check/getBalance',
             dataType: 'json',//希望服务器返回json格式的数据
 
             success: function (data) {
                 console.log(data)
-                //createHighCharts()
-				$('#tradeBalance').html(data["tradeBalance"])
-				$('#frozenBalance').html(data["frozenBalance"])
+                $('#tradeBalance').html(data["tradeBalance"])
+                $('#frozenBalance').html(data["frozenBalance"])
             },
 
             async: false,
-	})
+    })
 
 
 });
