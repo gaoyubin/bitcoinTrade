@@ -74,7 +74,7 @@ def index():
     fillMenus(menus, 0)
     #print menus
 
-    return render_template("/used/index.html", menus=menus)
+    return render_template("/index.html", menus=menus)
 
 
 @app.route("/api/kline", methods=['GET', 'POST'])
@@ -174,10 +174,10 @@ def get_history(symbol='btcusdt', size=10):
     for i in range(size):
         temp = []
         # amount price direction time
-        temp.append(random.random())
-        temp.append(random.randrange(500, 600))
-        temp.append("buy")
         temp.append("2019.10.1")
+        temp.append("买入")
+        temp.append(random.randrange(5000, 6000))
+        temp.append(random.random())
         data.append(temp)
 
     return jsonify(data)
@@ -325,4 +325,4 @@ def checkCapital():
     fillMenus(menus, 1)
     #print menus
 
-    return render_template("/used/check.html", menus=menus)
+    return render_template("/check.html", menus=menus)

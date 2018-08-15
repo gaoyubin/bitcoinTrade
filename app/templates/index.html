@@ -1,17 +1,15 @@
-﻿{% extends "dist/layout.html" %}
+﻿{% extends "layout/default.html" %}
 {% block page_content %}
 
 <script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.min.js"></script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
-<div class="container">
-   <h1 class="h2">K线</h1>
-   <div id="kline" class="chart"></div>
-   <h1 class="h2">余额</h1>
-   <div id="balance" class="chart"></div>
-   <h1 class="h2">交易纪录</h1>
-   <div id="history" class="table-responsive chart"></div>
-</div>
+<h3>余额</h3>
+<div id="balance" class="chart"></div>
+<h3>K线</h3>
+<div id="kline" class="chart"></div>
+<h3>交易纪录</h3>
+<div id="history" class="table-responsive chart"></div>
 
 <script type="text/javascript">
 var dom = document.getElementById("kline");
@@ -363,7 +361,7 @@ function  createTable(id,data,title){
    table.appendTo(id);
 
 
-   tableHead=new Array("时间","买入/卖出","成交价","成交量")
+   tableHead=new Array("时间","买入/卖出","成交价（USD）","成交量")
    var tr = $("<thead></thead>");
    tr.appendTo(table);
    for(var i=0;i<tableHead.length;i++)
@@ -406,4 +404,3 @@ function stop_trade(){
 </script>
 
 {% endblock %}
-
