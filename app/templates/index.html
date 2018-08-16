@@ -4,16 +4,51 @@
 <script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.min.js"></script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
-<h3>K线</h3>
-<div id="kline" class="chart"></div>
-<div class="row">
-   <div class="col-sm">
-      <h3>余额</h3>
-      <div id="balance" class="chart"></div>
+<style>
+   #wrapper {
+      display: grid;
+      grid-template-columns: 30% 34% 34%;
+      grid-template-rows: 50% 50%;
+      grid-gap: 1%;
+      height: 100%;
+      margin: 10px 30px;
+   }
+   #kline-wrapper {
+      grid-column: 2/4;
+      height: 100%;
+   }
+   #kline {
+      height: 80%;
+   }
+
+   #balance {
+      max-height: 100%
+   }
+
+</style>
+
+<div id="wrapper">
+   <div class="card" id="member-wrapper">
+      <h3>成员</h3>
    </div>
-   <div class="col-sm">
+   <div class="card" id="kline-wrapper">
+      <h3>K线</h3>
+      <div id="kline"></div>
+   </div>
+
+   <div class="card" id="history-wrapper">
       <h3>交易纪录</h3>
-      <div id="history" class="table-responsive chart"></div>
+      <div id="history" class="table-responsive"></div>
+   </div>
+
+   <div class="card" id="balance-wrapper">
+      <h3>余额</h3>
+      <div id="balance"></div>
+   </div>
+
+   <div class="card" id="predict-wrapper">
+      <h3>预测</h3>
+      <div id="predict"></div>
    </div>
 </div>
 
@@ -85,181 +120,182 @@ function calculateMA(dayCount) {
 function setoption(data0){
    option = {
       title: {
-     text: 'BTC-USDT',
-     left: 0
       },
       tooltip: {
-     trigger: 'axis',
-     axisPointer: {
-        type: 'cross'
-     }
+         trigger: 'axis',
+         axisPointer: {
+            type: 'cross'
+         }
       },
       legend: {
-     data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
+         data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30'],
+         top: '30px'
       },
       grid: {
-     left: '10%',
-     right: '10%',
-     bottom: '15%'
+         left: '4%',
+         right: '4%',
+         bottom: '10%'
       },
       xAxis: {
-     type: 'category',
-     data: data0.categoryData,
-     scale: true,
-     boundaryGap : false,
-     axisLine: {onZero: false},
-     splitLine: {show: false},
-     splitNumber: 20,
-     min: 'dataMin',
-     max: 'dataMax'
+         type: 'category',
+         data: data0.categoryData,
+         scale: true,
+         boundaryGap : false,
+         axisLine: {onZero: false},
+         splitLine: {show: false},
+         splitNumber: 20,
+         min: 'dataMin',
+         max: 'dataMax',
+         name: 'time'
       },
       yAxis: {
-     scale: true,
-     splitArea: {
-        show: true
-     }
+         scale: true,
+         splitArea: {
+            show: true
+         },
+         name: 'BTC-USDT'
       },
       dataZoom: [
-     {
-        type: 'inside',
-        start: 80,
-        end: 100
-     },
-     {
-        show: true,
-        type: 'slider',
-        y: '90%',
-        start: 80,
-        end: 100
-     }
+         {
+            type: 'inside',
+            start: 80,
+            end: 100
+         },
+         {
+            show: true,
+            type: 'slider',
+            y: '90%',
+            start: 80,
+            end: 100
+         }
       ],
       series: [
-     {
-        name: '日K',
-        type: 'candlestick',
-        data: data0.values,
-        itemStyle: {
-           normal: {
-          color: upColor,
-          color0: downColor,
-          borderColor: upBorderColor,
-          borderColor0: downBorderColor
-           }
-        },
-        markPoint: {
-           label: {
-          normal: {
-             formatter: function (param) {
-            return param != null ? Math.round(param.value) : '';
-             }
-          }
-           },
-           data: [
-          {
-             name: 'XX标点',
-             coord: ['2013/5/31', 2300],
-             value: 2300,
-             itemStyle: {
-            normal: {color: 'rgb(41,60,85)'}
-             }
-          },
-          {
-             name: 'highest value',
-             type: 'max',
-             valueDim: 'highest'
-          },
-          {
-             name: 'lowest value',
-             type: 'min',
-             valueDim: 'lowest'
-          },
-          {
-             name: 'average value on close',
-             type: 'average',
-             valueDim: 'close'
-          }
-           ],
-           tooltip: {
-          formatter: function (param) {
-             return param.name + '<br>' + (param.data.coord || '');
-          }
-           }
-        },
-        markLine: {
-           symbol: ['none', 'none'],
-           data: [
-          [
-             {
-            name: 'from lowest to highest',
-            type: 'min',
-            valueDim: 'lowest',
-            symbol: 'circle',
-            symbolSize: 10,
-            label: {
-               normal: {show: false},
-               emphasis: {show: false}
+         {
+            name: '日K',
+            type: 'candlestick',
+            data: data0.values,
+            itemStyle: {
+               normal: {
+                  color: upColor,
+                  color0: downColor,
+                  borderColor: upBorderColor,
+                  borderColor0: downBorderColor
+               }
+            },
+            markPoint: {
+               label: {
+                  normal: {
+                     formatter: function (param) {
+                        return param != null ? Math.round(param.value) : '';
+                     }
+                  }
+               },
+               data: [
+                  {
+                     name: 'XX标点',
+                     coord: ['2013/5/31', 2300],
+                     value: 2300,
+                     itemStyle: {
+                        normal: {color: 'rgb(41,60,85)'}
+                     }
+                  },
+                  {
+                     name: 'highest value',
+                     type: 'max',
+                     valueDim: 'highest'
+                  },
+                  {
+                     name: 'lowest value',
+                     type: 'min',
+                     valueDim: 'lowest'
+                  },
+                  {
+                     name: 'average value on close',
+                     type: 'average',
+                     valueDim: 'close'
+                  }
+               ],
+               tooltip: {
+                  formatter: function (param) {
+                     return param.name + '<br>' + (param.data.coord || '');
+                  }
+               }
+            },
+            markLine: {
+               symbol: ['none', 'none'],
+               data: [
+                  [
+                     {
+                        name: 'from lowest to highest',
+                        type: 'min',
+                        valueDim: 'lowest',
+                        symbol: 'circle',
+                        symbolSize: 10,
+                        label: {
+                           normal: {show: false},
+                           emphasis: {show: false}
+                        }
+                     },
+                     {
+                        type: 'max',
+                        valueDim: 'highest',
+                        symbol: 'circle',
+                        symbolSize: 10,
+                        label: {
+                           normal: {show: false},
+                           emphasis: {show: false}
+                        }
+                     }
+                  ],
+                  {
+                     name: 'min line on close',
+                     type: 'min',
+                     valueDim: 'close'
+                  },
+                  {
+                     name: 'max line on close',
+                     type: 'max',
+                     valueDim: 'close'
+                  }
+               ]
             }
-             },
-             {
-            type: 'max',
-            valueDim: 'highest',
-            symbol: 'circle',
-            symbolSize: 10,
-            label: {
-               normal: {show: false},
-               emphasis: {show: false}
+         },
+         {
+            name: 'MA5',
+            type: 'line',
+            data: calculateMA(5),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
             }
-             }
-          ],
-          {
-             name: 'min line on close',
-             type: 'min',
-             valueDim: 'close'
-          },
-          {
-             name: 'max line on close',
-             type: 'max',
-             valueDim: 'close'
-          }
-           ]
-        }
-     },
-     {
-        name: 'MA5',
-        type: 'line',
-        data: calculateMA(5),
-        smooth: true,
-        lineStyle: {
-           normal: {opacity: 0.5}
-        }
-     },
-     {
-        name: 'MA10',
-        type: 'line',
-        data: calculateMA(10),
-        smooth: true,
-        lineStyle: {
-           normal: {opacity: 0.5}
-        }
-     },
-     {
-        name: 'MA20',
-        type: 'line',
-        data: calculateMA(20),
-        smooth: true,
-        lineStyle: {
-           normal: {opacity: 0.5}
-        }
-     },
-     {
-        name: 'MA30',
-        type: 'line',
-        data: calculateMA(30),
-        smooth: true,
-        lineStyle: {
-           normal: {opacity: 0.5}
-        }
-     },
+         },
+         {
+            name: 'MA10',
+            type: 'line',
+            data: calculateMA(10),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
+            }
+         },
+         {
+            name: 'MA20',
+            type: 'line',
+            data: calculateMA(20),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
+            }
+         },
+         {
+            name: 'MA30',
+            type: 'line',
+            data: calculateMA(30),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
+            }
+         },
       ] 
    };
    return option;
@@ -370,7 +406,7 @@ function  createTable(id,data,title){
    table.appendTo(id);
 
 
-   tableHead=new Array("时间","买入/卖出","成交价（USD）","成交量")
+   tableHead=new Array("时间","买入/卖出","成交价","成交量")
    var tr = $("<thead></thead>");
    tr.appendTo(table);
    for(var i=0;i<tableHead.length;i++)
