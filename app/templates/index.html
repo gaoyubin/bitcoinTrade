@@ -4,16 +4,25 @@
 <script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.min.js"></script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
-<h3>余额</h3>
-<div id="balance" class="chart"></div>
 <h3>K线</h3>
 <div id="kline" class="chart"></div>
-<h3>交易纪录</h3>
-<div id="history" class="table-responsive chart"></div>
+<div class="row">
+   <div class="col-sm">
+      <h3>余额</h3>
+      <div id="balance" class="chart"></div>
+   </div>
+   <div class="col-sm">
+      <h3>交易纪录</h3>
+      <div id="history" class="table-responsive chart"></div>
+   </div>
+</div>
 
 <script type="text/javascript">
 var dom = document.getElementById("kline");
 var myChart = echarts.init(dom);
+$(window).on('resize', function(){
+      myChart.resize();
+});
 var app = {};
 option = null;
 var upColor = '#ec0000';
