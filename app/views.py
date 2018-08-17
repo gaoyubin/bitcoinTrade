@@ -326,3 +326,12 @@ def checkCapital():
     #print menus
 
     return render_template("/check.html", menus=menus)
+
+@app.route('/homePage', methods=['GET'])
+def homePage():
+
+    #return render_template("homePage.html")
+    fillMenus(menus, 1)
+    #print menus
+
+    return render_template("/homePage.html")
