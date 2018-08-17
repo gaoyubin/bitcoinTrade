@@ -13,15 +13,15 @@
     <title>Bitcoin Trade - one page bootstrap website template</title>
     
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/bootstrap.min.css')}}" rel="stylesheet">
 
     <!-- Plugin CSS -->
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/simple-line-icons.css">
-    <link rel="stylesheet" href="css/jquery.lightbox.min.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/simple-line-icons.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/jquery.lightbox.min.css')}}">
 
     <!-- Theme CSS -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet">
     
     <!-- Custom Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
@@ -186,13 +186,13 @@ sales@bitcointrade.com
 <!--//contact-->
 
     <!-- jQuery -->
-    <script src="js/jquery.min.js"></script>
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
     <!-- Lightbox JavaScript-->
-    <script src="js/jquery.lightbox.min.js"></script>
+    <script src="{{url_for('static',filename='js/jquery.lightbox.min.js')}}"></script>
     <!-- Theme JavaScript -->
-    <script src="js/script.js"></script>
+    <script src="{{url_for('static',filename='js/script.js')}}"></script>
 
 </body>
 </html>	
