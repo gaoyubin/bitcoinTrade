@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+flask-login = "*"
+flask-bootstrap = "*"
+requests = "*"
+numpy = "*"
+pandas = "*"
+tensorflow = "*"
+
+[requires]
+python_version = "3.6"

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="Bootstrap Website Templates">
+
+    <title>Bitcoin Trade - one page bootstrap website template</title>
+    
+    <!-- Bootstrap Core CSS -->
+    <link href="{{url_for('static',filename='css/bootstrap.min.css')}}" rel="stylesheet">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/simple-line-icons.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/jquery.lightbox.min.css')}}">
+
+    <!-- Theme CSS -->
+    <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet">
+    
+    <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top">
+
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top"><img src="{{url_for('static',filename='images/logo.png')}}" class="img-responsive"></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="page-scroll" href="#page-top">首页</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">关于我们</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#buyrate">关于比特币</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#sellrate">天台圈</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="{{url_for('index')}}">行情</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    
+     <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <div class="bwt-header-content">
+                        <div class="bwt-header-content-inner">
+                            <h1>全球化数字资产配置及交易服务</h1>
+                            <h2>独立专业的交易算法研究评估体系</h2>
+                            <h2>Tencent唯一赞助的比特币交易平台</h2>
+                            <a href="#about" class="btn btn-box btn-xl page-scroll">了解更多</a>
+                        </div>
+                    </div>
+                    <div class="bwt-click-to-bottom">
+				<a href="#about" class="scroll">
+					<i class="fa  fa-chevron-down"></i>
+				</a>
+			</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+<!--about-->
+<section id="about" class="bwt-about text-left">
+<div class="container">
+<div class="row">
+<div class="col-md-6"><img src="{{url_for('static',filename='images/bitcoin-640.png')}}" class="img-responsive" alt=""></div>
+<div class="col-md-6">
+<h1 class="bwt-section-title text-uppercase">关于我们</h1>
+<hr>
+<h2>安全, 稳定, 可信</h2>
+<p>炒币21天从入门到天台是主要数字资产和加密货币（比特币）的全功能现货交易平台，是Tencent唯一赞助的虚拟货币交易平台。本平台专注比特币，立志于成为全球领先的比特币交易平台。</p>
+<p>我们信仰比特币和区块链的核心思想，认为分布式账本和智能合约技术将构建人类的信任基础，消除交易壁垒，提升交易效率，对人类的实体经济产生重大的影响。因此我们放弃了很多诱惑，全力投入到区块链技术革命的大潮，希望可做一点点改变世界的事情。</p>
+</div>
+</div>
+</div>
+</section>
+<!--//about-->
+
+<!--Buy Rate-->
+<section id="buyrate" class="bwt-buyrate text-left">
+<div class="container text-center">
+<h1 class="bwt-section-title text-uppercase">关于比特币</h1>
+<hr>
+<div class="row">
+<div class="col-md-12">
+<div class="bdr">
+<h2>Bitcoin</h2>
+<!--<div class="image"><img src="images/btc.png" class="img-responsive" alt=""></div>-->
+<p class="text-left">比特币（Bitcoin，简称BTC）是目前使用最为广泛的一种数字货币，诞生于2009年1月3日，是一种点对点（P2P）传输的数字加密货币，总量2100万枚。比特币网络每10分钟释放出一定数量币，预计在2140年达到极限。比特币被投资者称为“数字黄金”。</p>
+<p class="text-left">比特币依据特定算法，通过大量的计算产生，不依靠特定货币机构发行，其使用整个P2P网络中众多节点构成的分布式数据库来确认并记录所有的交易行为，并使用密码学设计确保货币流通各个环节安全性，可确保无法通过大量制造比特币来人为操控币值。基于密码学的设计可以使比特币只能被真实拥有者转移、支付及兑现。同样确保了货币所有权与流通交易的匿名性。</p>
+<!--<a href="#">Buy Now!</a>-->
+</div>
+</div>
+
+</div>
+</div>
+</section>
+<!--//Buy Rate-->
+
+<!--footer-->
+<!--
+<footer class="bwt-footer">
+<div class="container text-left">
+<div class="row">
+
+<div class="col-sm-12 col-md-4">
+<div class="icon"><i class="fa fa-map-marker"></i></div>
+<div class="icon-text">
+<h3>Our Location</h3>
+<p>744 Melrose Street, Walla Walla, WA, Washington, USA
+</p>
+</div>
+</div>
+
+<div class="col-sm-12 col-md-4 md-top-marg">
+<div class="icon"><i class="fa fa-phone"></i></div>
+<div class="icon-text">
+<h3>Phone Numbers</h3>
+<p>+1-509-876-7242<br>+1-509-876-7242</p>
+</div>
+</div>
+
+<div class="col-sm-12 col-md-4 md-top-marg">
+<div class="icon"><i class="fa fa-envelope-o"></i></div>
+<div class="icon-text">
+<h3>E-Mail Address</h3>
+<p>info@bitcointrade.com<br>
+sales@bitcointrade.com
+</p>
+</div>
+</div>
+
+</div>
+</div>
+</footer>-->
+<!--//footer-->
+
+<!--copyright-->
+<div class="bwt-footer-copyright">
+<div class="container">
+<div class="row">
+<div class="col-md-12 copyright text-center">
+<div class="center-text">Copyright &copy; 炒币21天从入门到天台 2018. All Rights Reserved</div>
+</div>
+</div>
+</div>
+</div>
+<!--//copyright-->
+
+<!--//contact-->
+
+    <!-- jQuery -->
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    <!-- Lightbox JavaScript-->
+    <script src="{{url_for('static',filename='js/jquery.lightbox.min.js')}}"></script>
+    <!-- Theme JavaScript -->
+    <script src="{{url_for('static',filename='js/script.js')}}"></script>
+
+</body>
+</html>	

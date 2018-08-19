@@ -1,0 +1,561 @@
+﻿{% extends "layout/default.html" %}
+{% block page_content %}
+
+<script type="text/javascript" src="http://echarts.baidu.com/dist/echarts.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<style>
+   #wrapper {
+      display: grid;
+      grid-template-columns: 30% 34% 34%;
+      grid-template-rows: 50% 50%;
+      grid-gap: 1%;
+      height: 100%;
+      margin: 10px 30px;
+   }
+   #kline-wrapper {
+      grid-column: 2/4;
+      height: 100%;
+   }
+   #kline {
+      height: 80%;
+   }
+
+   #balance {
+      max-height: 100%
+   }
+
+</style>
+
+<div id="wrapper">
+   <div class="card" id="member-wrapper" >
+      <h3 >成员</h3>
+       <div  >
+		<ul >
+            <li>yaradong(董亚利)</li>
+            <li>appleybgao(高育滨)</li>
+            <li>nanxuchen(陈南旭)</li>
+            <li>bennyye(叶彬 )</li>
+            <li>bozhiyou(游博智)</li>
+            <li>chanwlzeng(曾威良)</li>
+            <li>cifanyang(杨启凡)</li>
+		    <li>wenqixue(薛文琦)</li>
+		</ul>
+
+	    </div>
+
+   </div>
+   <div class="card" id="kline-wrapper">
+      <h3>K线</h3>
+      <div id="kline"></div>
+   </div>
+
+   <div class="card" id="history-wrapper">
+      <h3>交易记录</h3>
+      <div id="history" class="table-responsive"></div>
+   </div>
+
+   <div class="card" id="balance-wrapper">
+      <h3>余额</h3>
+      <div id="balance"></div>
+   </div>
+
+   <div class="card" id="predict-wrapper">
+      <h3>预测</h3>
+      <div id="predict" style="height: 100%"></div>
+   </div>
+</div>
+
+<script type="text/javascript">
+var dom = document.getElementById("kline");
+var myChart = echarts.init(dom);
+$(window).on('resize', function(){
+      myChart.resize();
+});
+var app = {};
+option = null;
+var upColor = '#ec0000';
+var upBorderColor = '#8A0000';
+var downColor = '#00da3c';
+var downBorderColor = '#008F28';
+
+var datas;
+var data0;
+var option4kline;
+
+function setkline(){
+   fetch('/api/kline')
+      .then(function(response) {
+         return response.json();
+      }).then((j)=>{
+         datas = j['data'];
+         //console.log(datas);
+         data0 = splitData(datas);
+         option4kline = setoption(data0);
+         if (option4kline && typeof option4kline === "object") {
+            myChart.setOption(option4kline, true);
+         }
+      });
+}
+
+
+
+function splitData(rawData) {
+   var categoryData = [];
+   var values = []
+   for (var i = rawData.length-1;i >= 0;i--) {
+      categoryData.push(rawData[i].splice(0, 1)[0]);
+      values.push(rawData[i]);
+   }
+   return {
+      categoryData: categoryData,
+      values: values
+   };
+}
+
+function calculateMA(dayCount) {
+   var result = [];
+   for (var i = 0, len = data0.values.length; i < len; i++) {
+      if (i < dayCount) {
+     result.push('-');
+     continue;
+      }
+      var sum = 0;
+      for (var j = 0; j < dayCount; j++) {
+     sum += data0.values[i - j][1];
+      }
+      result.push(sum / dayCount);
+   }
+   return result;
+}
+
+
+
+function setoption(data0){
+   option = {
+      title: {
+      },
+      tooltip: {
+         trigger: 'axis',
+         axisPointer: {
+            type: 'cross'
+         }
+      },
+      legend: {
+         data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30'],
+         top: '30px'
+      },
+      grid: {
+         left: '4%',
+         right: '4%',
+         bottom: '10%'
+      },
+      xAxis: {
+         type: 'category',
+         data: data0.categoryData,
+         scale: true,
+         boundaryGap : false,
+         axisLine: {onZero: false},
+         splitLine: {show: false},
+         splitNumber: 20,
+         min: 'dataMin',
+         max: 'dataMax',
+         name: 'time'
+      },
+      yAxis: {
+         scale: true,
+         splitArea: {
+            show: true
+         },
+         name: 'BTC-USDT'
+      },
+      dataZoom: [
+         {
+            type: 'inside',
+            start: 80,
+            end: 100
+         },
+         {
+            show: true,
+            type: 'slider',
+            y: '90%',
+            start: 80,
+            end: 100
+         }
+      ],
+      series: [
+         {
+            name: '日K',
+            type: 'candlestick',
+            data: data0.values,
+            itemStyle: {
+               normal: {
+                  color: upColor,
+                  color0: downColor,
+                  borderColor: upBorderColor,
+                  borderColor0: downBorderColor
+               }
+            },
+            markPoint: {
+               label: {
+                  normal: {
+                     formatter: function (param) {
+                        return param != null ? Math.round(param.value) : '';
+                     }
+                  }
+               },
+               data: [
+                  {
+                     name: 'XX标点',
+                     coord: ['2013/5/31', 2300],
+                     value: 2300,
+                     itemStyle: {
+                        normal: {color: 'rgb(41,60,85)'}
+                     }
+                  },
+                  {
+                     name: 'highest value',
+                     type: 'max',
+                     valueDim: 'highest'
+                  },
+                  {
+                     name: 'lowest value',
+                     type: 'min',
+                     valueDim: 'lowest'
+                  },
+                  {
+                     name: 'average value on close',
+                     type: 'average',
+                     valueDim: 'close'
+                  }
+               ],
+               tooltip: {
+                  formatter: function (param) {
+                     return param.name + '<br>' + (param.data.coord || '');
+                  }
+               }
+            },
+            markLine: {
+               symbol: ['none', 'none'],
+               data: [
+                  [
+                     {
+                        name: 'from lowest to highest',
+                        type: 'min',
+                        valueDim: 'lowest',
+                        symbol: 'circle',
+                        symbolSize: 10,
+                        label: {
+                           normal: {show: false},
+                           emphasis: {show: false}
+                        }
+                     },
+                     {
+                        type: 'max',
+                        valueDim: 'highest',
+                        symbol: 'circle',
+                        symbolSize: 10,
+                        label: {
+                           normal: {show: false},
+                           emphasis: {show: false}
+                        }
+                     }
+                  ],
+                  {
+                     name: 'min line on close',
+                     type: 'min',
+                     valueDim: 'close'
+                  },
+                  {
+                     name: 'max line on close',
+                     type: 'max',
+                     valueDim: 'close'
+                  }
+               ]
+            }
+         },
+         {
+            name: 'MA5',
+            type: 'line',
+            data: calculateMA(5),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
+            }
+         },
+         {
+            name: 'MA10',
+            type: 'line',
+            data: calculateMA(10),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
+            }
+         },
+         {
+            name: 'MA20',
+            type: 'line',
+            data: calculateMA(20),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
+            }
+         },
+         {
+            name: 'MA30',
+            type: 'line',
+            data: calculateMA(30),
+            smooth: true,
+            lineStyle: {
+               normal: {opacity: 0.5}
+            }
+         },
+      ] 
+   };
+   return option;
+}
+setkline();
+setInterval(setkline, 60000);
+
+
+//////////////////////////////////////////////////////////
+
+
+window.onload = function () {
+   var dataPoints1 = [];
+   var dataPoints2 = [];
+
+   var chart = new CanvasJS.Chart("balance", {
+      zoomEnabled: true,
+      title: {
+         text: ""
+      },
+      axisX: {
+         title: ""
+      },
+      axisY:{
+         prefix: "RMB ",
+         includeZero: false
+      }, 
+      toolTip: {
+         shared: true
+      },
+      legend: {
+         cursor:"pointer",
+         verticalAlign: "top",
+         fontSize: 22,
+         fontColor: "dimGrey",
+         itemclick : toggleDataSeries
+      },
+      data: [{ 
+         type: "line",
+         xValueType: "dateTime",
+         yValueFormatString: "$####.00",
+         xValueFormatString: "hh:mm:ss TT",
+         showInLegend: true,
+         name: "交易余额",
+         dataPoints: dataPoints1
+      }]
+   });
+
+   function toggleDataSeries(e) {
+      if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+         e.dataSeries.visible = false;
+      }
+      else {
+         e.dataSeries.visible = true;
+      }
+      chart.render();
+   }
+
+   var updateInterval = 3000;
+   // initial value
+   var yValue1 = 0; 
+   var yValue2 = 100;
+
+   var time = new Date();
+   // starting at 9.30 am
+   // time.setHours(9);
+   // time.setMinutes(30);
+   // time.setSeconds(00);
+   // time.setMilliseconds(00);
+
+   function updateChart(count) {
+      count = count || 1;
+      time = new Date();
+      fetch("/api/balance").then(
+         (response)=>{
+            return response.json();
+         }
+      ).then((data)=>{
+         //console.log(data['list'][0]['balance']);
+         //yValue1 = parseFloat(data['list'][0]['balance']);
+          yValue1 = parseFloat(data['total']);
+         dataPoints1.push({
+            x: time.getTime(),
+            y: yValue1
+         });
+         chart.options.data[0].legendText = "交易余额 RMB " + yValue1.toFixed(2);
+         chart.render();
+      });
+      // yValue1++;
+      // dataPoints1.push({
+      //         x: time.getTime(),
+      //         y: yValue1
+      //     });
+      // chart.render();
+   }
+
+   // generates first set of dataPoints 
+   updateChart(0);    
+   setInterval(function(){updateChart()}, updateInterval);
+   loadtable();
+
+}
+////////////////////////////////////////////
+function  createTable(id,data,title){
+   id.children("table").remove()
+
+   var table = $('<table class="table table-striped table-sm">');
+
+   table.appendTo(id);
+
+
+   tableHead=new Array("时间","买入/卖出","成交价","成交量1/10000")
+   var tr = $("<thead></thead>");
+   tr.appendTo(table);
+   for(var i=0;i<tableHead.length;i++)
+   {
+      var td = $("<th >"+tableHead[i]+"</th>");
+      td.appendTo(tr);
+   }
+   
+   table.append('<tbody>')
+
+   for(var i=0;i<data.length;i++){
+      var tr=$("<tr></tr>");
+      tr.appendTo(table);
+      for(var j=0;j<data[i].length;j++){
+         var td = $("<td>" + data[i][j] + "</td>");
+         td.appendTo(tr);
+      }
+   }
+
+   table.append('</tbody>')
+
+   id.append("</table>");
+}
+
+function loadtable() {
+   fetch('/api/history').then(data => data.json())
+                        .then(data => {
+                           createTable($('#history'), data, '交易纪录')
+                        })
+}
+
+function start_trade(){
+   fetch('/api/start');
+}
+
+function stop_trade(){
+   fetch('/api/stop');
+}
+
+
+
+
+////////////////////////////////predict
+var cur = [];
+var pre = [];
+
+var chart = new CanvasJS.Chart("predict", {
+	zoomEnabled: true,
+	axisY:{
+		prefix: "$",
+		includeZero: false
+	}, 
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor:"pointer",
+		verticalAlign: "top",
+		fontSize: 22,
+		fontColor: "dimGrey",
+		itemclick : toggleDataSeries
+	},
+	data: [{ 
+		type: "line",
+		xValueType: "dateTime",
+		yValueFormatString: "$####.00",
+		xValueFormatString: "hh:mm:ss TT",
+		showInLegend: true,
+		name: "实际价格",
+		dataPoints: cur
+		},
+		{				
+			type: "line",
+			xValueType: "dateTime",
+			yValueFormatString: "$####.00",
+			showInLegend: true,
+			name: "预测价格" ,
+			dataPoints: pre
+	}]
+});
+
+function toggleDataSeries(e) {
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	}
+	else {
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+
+// initial value
+var yValue1 = 0; 
+var yValue2 = 0;
+
+function updatepreChart() {
+      fetch('/api/predict')
+      .then(response => response.json())
+      .then(data => {
+            yValue1 = data.cur;
+            yValue2 = data.prediction;
+            var time = new Date();
+            cur.push({
+                  x: time.getTime(),
+                  y: yValue1
+            });
+            var min=time.getMinutes();  //2. 获取当前分钟
+            time.setMinutes(min+1);  //3. 设置当前时间+10分钟：把当前分钟数+10后的值重新设置为date对象的分钟数
+            // pushing the new values
+            pre.push({
+                  x: time.getTime(),
+                  y: yValue2
+            });
+
+            // updating legend text with  updated with y Value 
+            chart.options.data[0].legendText = " 实际价格  $" + yValue1;
+            chart.options.data[1].legendText = " 预测价格  $" + yValue2; 
+            chart.render();
+      })
+
+}
+// generates first set of dataPoints 
+updatepreChart();	
+setInterval(function(){updatepreChart()}, 60000);
+
+</script>
+
+{% endblock %}
